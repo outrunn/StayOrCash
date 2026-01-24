@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PokerWar.Systems
+namespace StayOrCash.Systems
 {
     /// <summary>
     /// Manages persistent player data (cash, high scores, etc.) using PlayerPrefs.

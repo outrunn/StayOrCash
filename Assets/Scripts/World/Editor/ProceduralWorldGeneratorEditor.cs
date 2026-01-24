@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using PokerWar.World;
+using StayOrCash.World;
 
 [CustomEditor(typeof(ProceduralWorldGenerator))]
 public class ProceduralWorldGeneratorEditor : Editor

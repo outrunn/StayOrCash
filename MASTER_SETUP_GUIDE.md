@@ -1,6 +1,6 @@
-# PokerWar - Master Setup Guide
+# StayOrCash - Master Setup Guide
 
-**Complete guide to get PokerWar playable from scratch**
+**Complete guide to get StayOrCash playable from scratch**
 
 Unity 6 (6000.0.34f1) | Universal Render Pipeline | 2-Hour Game Jam Project
 
@@ -38,8 +38,8 @@ For experienced Unity users who want to get running fast:
 
 ### 1. Create Config Assets (2 min)
 ```
-Assets → Create → PokerWar → Game Config → Name: "DefaultGameConfig"
-Assets → Create → PokerWar → World Generation Config → Name: "DefaultWorldConfig"
+Assets → Create → StayOrCash → Game Config → Name: "DefaultGameConfig"
+Assets → Create → StayOrCash → World Generation Config → Name: "DefaultWorldConfig"
 ```
 
 ### 2. Setup GameManager (5 min)
@@ -85,7 +85,7 @@ The refactored architecture uses **ScriptableObject** assets to store game setti
 #### 1.1 Create Game Config
 
 1. In the **Project** window, navigate to `Assets/`
-2. Right-click → **Create → PokerWar → Game Config**
+2. Right-click → **Create → StayOrCash → Game Config**
 3. Name it `DefaultGameConfig`
 4. Select the asset and set values in **Inspector**:
    - **Base Time**: `60` (starting time in seconds for Run 1)
@@ -103,7 +103,7 @@ The refactored architecture uses **ScriptableObject** assets to store game setti
 #### 1.2 Create World Generation Config
 
 1. In the **Project** window, navigate to `Assets/`
-2. Right-click → **Create → PokerWar → World Generation Config**
+2. Right-click → **Create → StayOrCash → World Generation Config**
 3. Name it `DefaultWorldConfig`
 4. Select the asset and review settings in **Inspector**:
    - **World Size**: `100` (100×100 units)
@@ -136,9 +136,9 @@ The GameManager orchestrates all game systems using a modular architecture.
 
 Add these three components in order (Add Component button):
 
-1. **GameManager** (`PokerWar.Managers.GameManager`)
-2. **TimeManager** (`PokerWar.Systems.TimeManager`)
-3. **ScoreManager** (`PokerWar.Systems.ScoreManager`)
+1. **GameManager** (`StayOrCash.Managers.GameManager`)
+2. **TimeManager** (`StayOrCash.Systems.TimeManager`)
+3. **ScoreManager** (`StayOrCash.Systems.ScoreManager`)
 
 **Note**: If you see multiple options, select the ones with the namespace shown in parentheses.
 
@@ -191,7 +191,7 @@ The WorldGenerator creates procedural terrain and spawns objects.
 
 1. Click **Add Component**
 2. Search for `ProceduralWorldGenerator`
-3. Select **ProceduralWorldGenerator** (`PokerWar.World`)
+3. Select **ProceduralWorldGenerator** (`StayOrCash.World`)
 
 #### 3.3 Configure WorldGenerator
 
@@ -514,7 +514,7 @@ If performance is bad, reduce object counts in `DefaultWorldConfig`.
 **Fix**:
 1. Check Console for red error messages
 2. Common issues:
-   - Missing namespace imports: Add `using PokerWar.X;`
+   - Missing namespace imports: Add `using StayOrCash.X;`
    - Wrong namespace: Verify script is in correct folder
    - Mismatched component references: Update Inspector references
 3. If unsure, check `CLAUDE.md` for architecture details
@@ -652,13 +652,13 @@ Player decides: Continue or Cash Out
 
 All scripts use C# namespaces for organization:
 
-- `PokerWar.Managers` - GameManager
-- `PokerWar.Systems` - TimeManager, ScoreManager
-- `PokerWar.Data` - Config ScriptableObjects
-- `PokerWar.Interfaces` - IInteractable, IWorldGenerator, etc.
-- `PokerWar.Player` - FirstPersonController
-- `PokerWar.UI` - GameUI
-- `PokerWar.World` - ChestInteractable, ProceduralWorldGenerator
+- `StayOrCash.Managers` - GameManager
+- `StayOrCash.Systems` - TimeManager, ScoreManager
+- `StayOrCash.Data` - Config ScriptableObjects
+- `StayOrCash.Interfaces` - IInteractable, IWorldGenerator, etc.
+- `StayOrCash.Player` - FirstPersonController
+- `StayOrCash.UI` - GameUI
+- `StayOrCash.World` - ChestInteractable, ProceduralWorldGenerator
 
 **Benefits**: Clean organization, prevents naming conflicts, professional structure
 

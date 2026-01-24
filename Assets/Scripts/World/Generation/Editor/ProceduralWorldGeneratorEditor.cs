@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using PokerWar.World;
+using StayOrCash.World;
 
-namespace PokerWar.Editor
+namespace StayOrCash.Editor
 {
     /// <summary>
     /// Custom editor for ProceduralWorldGenerator with helpful automation tools.

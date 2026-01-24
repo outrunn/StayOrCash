@@ -3,19 +3,19 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 using UnityEditor.SceneManagement;
-using PokerWar.Managers;
-using PokerWar.Systems;
-using PokerWar.Data;
-using PokerWar.World;
-using PokerWar.UI;
+using StayOrCash.Managers;
+using StayOrCash.Systems;
+using StayOrCash.Data;
+using StayOrCash.World;
+using StayOrCash.UI;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PokerWar.Editor
+namespace StayOrCash.Editor
 {
     /// <summary>
     /// Automated setup wizard that implements the Master Setup Guide.
-    /// Accessible via Tools → PokerWar → Run Setup Wizard
+    /// Accessible via Tools → Stay or Cash → Run Setup Wizard
     /// </summary>
     public class SetupWizard : EditorWindow
     {
@@ -23,10 +23,10 @@ namespace PokerWar.Editor
         private StringBuilder report = new StringBuilder();
         private bool setupComplete = false;
 
-        [MenuItem("Tools/PokerWar/Run Setup Wizard")]
+        [MenuItem("Tools/Stay or Cash/Run Setup Wizard")]
         public static void ShowWindow()
         {
-            SetupWizard window = GetWindow<SetupWizard>("PokerWar Setup Wizard");
+            SetupWizard window = GetWindow<SetupWizard>("Stay or Cash Setup Wizard");
             window.minSize = new Vector2(600, 400);
             window.Show();
         }
@@ -34,7 +34,7 @@ namespace PokerWar.Editor
         private void OnGUI()
         {
             EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("PokerWar Automated Setup Wizard", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Stay or Cash Automated Setup Wizard", EditorStyles.boldLabel);
             EditorGUILayout.LabelField("This wizard will automate the Master Setup Guide", EditorStyles.miniLabel);
             EditorGUILayout.Space(10);
 
@@ -154,7 +154,7 @@ namespace PokerWar.Editor
 
                 setupComplete = true;
 
-                Debug.Log("PokerWar Setup Wizard completed successfully!");
+                Debug.Log("Stay or Cash Setup Wizard completed successfully!");
             }
             catch (System.Exception e)
             {

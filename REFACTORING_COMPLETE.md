@@ -1,4 +1,4 @@
-# ✅ Refactoring Complete - PokerWar
+# ✅ Refactoring Complete - StayOrCash
 
 ## Summary
 
@@ -8,7 +8,7 @@ Your project has been successfully refactored from a monolithic structure into a
 
 ### 🏗️ Architecture Improvements
 
-1. **Namespaces Added**: All scripts now use proper C# namespaces (`PokerWar.*`)
+1. **Namespaces Added**: All scripts now use proper C# namespaces (`StayOrCash.*`)
 2. **Interfaces Created**: Common behaviors abstracted (`IInteractable`, `IWorldGenerator`, `IGameStateObserver`)
 3. **Systems Separated**: GameManager split into TimeManager, ScoreManager, and GameManager
 4. **Configuration Externalized**: Settings moved to ScriptableObject assets
@@ -55,21 +55,21 @@ The code is refactored, but **you must update your Unity scene** to use the new 
 
 1. **Create Configuration Assets** (2 minutes)
    ```
-   Assets → Create → PokerWar → Game Config
-   Assets → Create → PokerWar → World Generation Config
+   Assets → Create → StayOrCash → Game Config
+   Assets → Create → StayOrCash → World Generation Config
    ```
 
 2. **Update GameManager GameObject** (3 minutes)
    - Remove old `GameManager` component
    - Add new components:
-     - `GameManager` (PokerWar.Managers)
-     - `TimeManager` (PokerWar.Systems)
-     - `ScoreManager` (PokerWar.Systems)
+     - `GameManager` (StayOrCash.Managers)
+     - `TimeManager` (StayOrCash.Systems)
+     - `ScoreManager` (StayOrCash.Systems)
    - Assign all references in Inspector
 
 3. **Update WorldGenerator GameObject** (2 minutes)
    - Remove old `ProceduralWorldGenerator`
-   - Add new `ProceduralWorldGenerator` (PokerWar.World)
+   - Add new `ProceduralWorldGenerator` (StayOrCash.World)
    - Assign `WorldGenerationConfig` asset
    - Click "Auto-Assign SimpleNaturePack Prefabs"
 
@@ -180,8 +180,8 @@ float timeLeft = gm.CurrentTime; // This property doesn't exist anymore!
 
 ### Adding New Interactable
 ```csharp
-using PokerWar.Interfaces;
-using PokerWar.Managers;
+using StayOrCash.Interfaces;
+using StayOrCash.Managers;
 
 public class MyNewObject : MonoBehaviour, IInteractable
 {

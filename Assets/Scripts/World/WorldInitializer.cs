@@ -1,5 +1,5 @@
 using UnityEngine;
-using PokerWar.World;
+using StayOrCash.World;
 
 /// <summary>
 /// Initializes the procedural world when the game starts.

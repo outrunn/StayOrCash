@@ -1,4 +1,4 @@
-# PokerWar - Setup Guide
+# StayOrCash - Setup Guide
 
 This guide will help you set up the procedural generation game in Unity.
 

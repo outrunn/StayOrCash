@@ -1,14 +1,14 @@
 # Setup Wizard - Quick Instructions
 
-**Automated setup for PokerWar using Unity Editor script**
+**Automated setup for StayOrCash using Unity Editor script**
 
 ---
 
 ## How to Run the Wizard
 
-1. **Open Unity Editor** with the PokerWar project
+1. **Open Unity Editor** with the StayOrCash project
 2. **Make sure you're in the correct scene** (SampleScene or mainscene)
-3. Go to Unity menu: **Tools → PokerWar → Run Setup Wizard**
+3. Go to Unity menu: **Tools → StayOrCash → Run Setup Wizard**
 4. Review the wizard window information
 5. Click **"Run Setup"** button
 6. Wait for completion (usually < 5 seconds)
@@ -36,10 +36,10 @@ The wizard handles 95% of the MASTER_SETUP_GUIDE.md automatically:
 ### ✅ GameManager Setup
 - Creates `GameManager` GameObject in scene
 - Adds three components:
-  - `GameManager` (PokerWar.Managers)
-  - `TimeManager` (PokerWar.Systems)
-  - `ScoreManager` (PokerWar.Systems)
-  - `PersistentDataManager` (PokerWar.Systems)
+  - `GameManager` (StayOrCash.Managers)
+  - `TimeManager` (StayOrCash.Systems)
+  - `ScoreManager` (StayOrCash.Systems)
+  - `PersistentDataManager` (StayOrCash.Systems)
 - Wires all internal references automatically
 - Assigns GameConfig to all systems
 

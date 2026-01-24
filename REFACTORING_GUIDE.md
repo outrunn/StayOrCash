@@ -1,6 +1,6 @@
-# Refactoring Guide - PokerWar
+# Refactoring Guide - StayOrCash
 
-This document explains the modular refactoring of the PokerWar project.
+This document explains the modular refactoring of the StayOrCash project.
 
 ## ✨ What Changed
 
@@ -53,7 +53,7 @@ Assets/Scripts/
 
 ### 1. Managers (Orchestration Layer)
 
-**GameManager** (`PokerWar.Managers.GameManager`)
+**GameManager** (`StayOrCash.Managers.GameManager`)
 - Singleton pattern for global access
 - Orchestrates TimeManager, ScoreManager, and WorldGenerator
 - Manages game state machine (Idle, Playing, ChestCollected, TimeUp, etc.)
@@ -64,13 +64,13 @@ Assets/Scripts/
 
 ### 2. Systems (Logic Layer)
 
-**TimeManager** (`PokerWar.Systems.TimeManager`)
+**TimeManager** (`StayOrCash.Systems.TimeManager`)
 - Counts down time each run
 - Calculates time limits based on GameConfig
 - Fires events: `OnTimeUpdate`, `OnTimeUp`
 - Provides methods: `StartTimer()`, `PauseTimer()`, `ResumeTimer()`, `AddTime()`
 
-**ScoreManager** (`PokerWar.Systems.ScoreManager`)
+**ScoreManager** (`StayOrCash.Systems.ScoreManager`)
 - Tracks current run, total score, run score
 - Calculates score based on GameConfig formulas
 - Fires events: `OnScoreChanged`, `OnRunChanged`
@@ -80,16 +80,16 @@ Assets/Scripts/
 
 ### 3. Data (Configuration Layer)
 
-**GameConfig** (`PokerWar.Data.GameConfig`)
+**GameConfig** (`StayOrCash.Data.GameConfig`)
 - ScriptableObject asset created in Unity Editor
 - Stores: base time, time reductions, score multipliers, delays
 - Methods: `CalculateTimeLimit(runNumber)`, `CalculateRunScore(timeRemaining, runNumber)`
-- Created via: `Assets -> Create -> PokerWar -> Game Config`
+- Created via: `Assets -> Create -> StayOrCash -> Game Config`
 
-**WorldGenerationConfig** (`PokerWar.Data.WorldGenerationConfig`)
+**WorldGenerationConfig** (`StayOrCash.Data.WorldGenerationConfig`)
 - ScriptableObject for world generation settings
 - Stores: world size, terrain height, noise scale, object counts, scale ranges
-- Created via: `Assets -> Create -> PokerWar -> World Generation Config`
+- Created via: `Assets -> Create -> StayOrCash -> World Generation Config`
 
 **Why**: Settings can be tweaked in editor without code changes, multiple configs can exist for different difficulty levels
 
@@ -185,7 +185,7 @@ public class GameManager : MonoBehaviour
 
 **GameConfig**:
 1. Right-click in Project window
-2. `Create -> PokerWar -> Game Config`
+2. `Create -> StayOrCash -> Game Config`
 3. Name it `DefaultGameConfig`
 4. Set values in Inspector:
    - Base Time: 60
@@ -197,7 +197,7 @@ public class GameManager : MonoBehaviour
 
 **WorldGenerationConfig**:
 1. Right-click in Project window
-2. `Create -> PokerWar -> World Generation Config`
+2. `Create -> StayOrCash -> World Generation Config`
 3. Name it `DefaultWorldConfig`
 4. Set values (or use defaults)
 
@@ -205,9 +205,9 @@ public class GameManager : MonoBehaviour
 
 1. Find/Create `GameManager` GameObject in scene
 2. Add components:
-   - `GameManager` (PokerWar.Managers)
-   - `TimeManager` (PokerWar.Systems)
-   - `ScoreManager` (PokerWar.Systems)
+   - `GameManager` (StayOrCash.Managers)
+   - `TimeManager` (StayOrCash.Systems)
+   - `ScoreManager` (StayOrCash.Systems)
 
 3. Assign references on `GameManager`:
    - Game Config: Drag `DefaultGameConfig` asset
@@ -226,7 +226,7 @@ public class GameManager : MonoBehaviour
 
 1. Find/Create `WorldGenerator` GameObject
 2. Remove old `ProceduralWorldGenerator` component (if exists)
-3. Add NEW `ProceduralWorldGenerator` (PokerWar.World)
+3. Add NEW `ProceduralWorldGenerator` (StayOrCash.World)
 4. Assign references:
    - Config: Drag `DefaultWorldConfig` asset
    - Chest Prefab: Drag chest prefab
@@ -236,7 +236,7 @@ public class GameManager : MonoBehaviour
 
 1. Open Player prefab
 2. Remove old `FirstPersonController` (if exists)
-3. Add NEW `FirstPersonController` (PokerWar.Player)
+3. Add NEW `FirstPersonController` (StayOrCash.Player)
 4. Ensure `CharacterController` component exists
 5. Player should auto-create camera
 
@@ -244,7 +244,7 @@ public class GameManager : MonoBehaviour
 
 1. Open Chest prefab
 2. Remove old `ChestInteractable` (if exists)
-3. Add NEW `ChestInteractable` (PokerWar.World)
+3. Add NEW `ChestInteractable` (StayOrCash.World)
 4. Set interaction range: 3
 5. Set interaction prompt: "Press E to collect chest"
 
@@ -287,7 +287,7 @@ When adding new features, follow this pattern:
 - [ ] Implement system with single responsibility
 - [ ] Add events for state changes
 - [ ] Subscribe to events in relevant observers (UI, etc.)
-- [ ] Use namespaces (`PokerWar.MyFeature`)
+- [ ] Use namespaces (`StayOrCash.MyFeature`)
 - [ ] Document with XML comments (`/// <summary>`)
 
 ## 🚨 Common Pitfalls

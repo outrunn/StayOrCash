@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using PokerWar.Interfaces;
-using PokerWar.Managers;
-using PokerWar.World;
+using StayOrCash.Interfaces;
+using StayOrCash.Managers;
+using StayOrCash.World;
 
-namespace PokerWar.Player
+namespace StayOrCash.Player
 {
     /// <summary>
     /// First-person player controller with movement, camera, and interaction.
@@ -199,7 +199,7 @@ namespace PokerWar.Player
             // For now, just check for the chest
             if (GameManager.Instance == null) return null;
 
-            var worldGen = GameManager.Instance.WorldGenerator as PokerWar.World.ProceduralWorldGenerator;
+            var worldGen = GameManager.Instance.WorldGenerator as StayOrCash.World.ProceduralWorldGenerator;
             if (worldGen == null) return null;
 
             GameObject chest = worldGen.GetCurrentChest();

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**PokerWar** is a Unity 6 (6000.0.34f1) class project using the Universal Render Pipeline (URP). This is a **2-hour game jam scope project** - keep implementations simple and focused.
+**Stay or Cash** is a Unity 6 (6000.0.34f1) class project using the Universal Render Pipeline (URP). This is a **2-hour game jam scope project** - keep implementations simple and focused.
 
 **Game Concept:**
 A first-person procedurally generated survival game where players race against time to find treasure chests in randomly generated natural environments. Each successful run increases difficulty with reduced time limits, creating a risk/reward mechanic where players must decide whether to cash out or push for higher scores.
@@ -289,19 +289,19 @@ The project uses a **modular, event-driven architecture** with clear separation 
 ### Namespace Organization
 
 ```
-PokerWar.Managers    - Orchestration layer (GameManager)
-PokerWar.Systems     - Game logic systems (TimeManager, ScoreManager)
-PokerWar.Data        - Configuration assets (GameConfig, WorldGenerationConfig)
-PokerWar.Interfaces  - Contracts (IInteractable, IWorldGenerator, IGameStateObserver)
-PokerWar.Player      - Player-related code (FirstPersonController)
-PokerWar.UI          - User interface (GameUI)
-PokerWar.World       - World and interactables (ProceduralWorldGenerator, ChestInteractable)
-PokerWar.Editor      - Editor tools (Custom inspectors)
+StayOrCash.Managers    - Orchestration layer (GameManager)
+StayOrCash.Systems     - Game logic systems (TimeManager, ScoreManager)
+StayOrCash.Data        - Configuration assets (GameConfig, WorldGenerationConfig)
+StayOrCash.Interfaces  - Contracts (IInteractable, IWorldGenerator, IGameStateObserver)
+StayOrCash.Player      - Player-related code (FirstPersonController)
+StayOrCash.UI          - User interface (GameUI)
+StayOrCash.World       - World and interactables (ProceduralWorldGenerator, ChestInteractable)
+StayOrCash.Editor      - Editor tools (Custom inspectors)
 ```
 
 ### Implemented Systems
 
-#### **GameManager** (`PokerWar.Managers.GameManager`)
+#### **GameManager** (`StayOrCash.Managers.GameManager`)
 *Orchestrates all game systems*
 - Singleton pattern for global access
 - Manages game state machine (Idle, Starting, Playing, ChestCollected, TimeUp, CashedOut)
@@ -309,7 +309,7 @@ PokerWar.Editor      - Editor tools (Custom inspectors)
 - Fires `OnGameStateChanged` event
 - **Does NOT** contain game logic (delegates to systems)
 
-#### **TimeManager** (`PokerWar.Systems.TimeManager`)
+#### **TimeManager** (`StayOrCash.Systems.TimeManager`)
 *Handles countdown timer with accelerating difficulty*
 - Counts down time each run
 - Calculates time limits based on `GameConfig`
@@ -317,7 +317,7 @@ PokerWar.Editor      - Editor tools (Custom inspectors)
 - Methods: `StartTimer()`, `PauseTimer()`, `ResumeTimer()`, `AddTime()`
 - Independent system - no GameManager dependency
 
-#### **ScoreManager** (`PokerWar.Systems.ScoreManager`)
+#### **ScoreManager** (`StayOrCash.Systems.ScoreManager`)
 *Tracks score and run progression*
 - Manages current run number, total score, run score
 - Calculates scores using `GameConfig` formulas
@@ -325,7 +325,7 @@ PokerWar.Editor      - Editor tools (Custom inspectors)
 - Methods: `StartNewRun()`, `AddChestScore()`, `ResetScore()`
 - Returns `ScoreStats` struct for UI display
 
-#### **ProceduralWorldGenerator** (`PokerWar.World.ProceduralWorldGenerator`)
+#### **ProceduralWorldGenerator** (`StayOrCash.World.ProceduralWorldGenerator`)
 *Generates terrain and spawns objects*
 - Implements `IWorldGenerator` interface
 - Uses `WorldGenerationConfig` for all settings
@@ -334,14 +334,14 @@ PokerWar.Editor      - Editor tools (Custom inspectors)
 - Chest spawning at controlled distances
 - Editor tool for auto-assigning SimpleNaturePack prefabs
 
-#### **ChestInteractable** (`PokerWar.World.ChestInteractable`)
+#### **ChestInteractable** (`StayOrCash.World.ChestInteractable`)
 *Collectible treasure chest*
 - Implements `IInteractable` interface
 - Visual feedback: rotation + bobbing animation
 - Gizmos show interaction range in editor
 - Notifies GameManager when collected
 
-#### **FirstPersonController** (`PokerWar.Player.FirstPersonController`)
+#### **FirstPersonController** (`StayOrCash.Player.FirstPersonController`)
 *Player movement and interaction*
 - WASD movement, mouse look, jumping, sprinting
 - Uses Unity's New Input System
@@ -349,7 +349,7 @@ PokerWar.Editor      - Editor tools (Custom inspectors)
 - Auto-creates camera if not assigned
 - Fallback input actions if asset not found
 
-#### **GameUI** (`PokerWar.UI.GameUI`)
+#### **GameUI** (`StayOrCash.UI.GameUI`)
 *Event-driven UI controller*
 - Subscribes to TimeManager, ScoreManager, GameManager events
 - Updates timer, score, run displays automatically
@@ -359,16 +359,16 @@ PokerWar.Editor      - Editor tools (Custom inspectors)
 
 ### Configuration Assets (ScriptableObjects)
 
-#### **GameConfig** (`PokerWar.Data.GameConfig`)
+#### **GameConfig** (`StayOrCash.Data.GameConfig`)
 *Game balance and timing settings*
-- Create via: `Assets → Create → PokerWar → Game Config`
+- Create via: `Assets → Create → Stay or Cash → Game Config`
 - Settings: base time, time reductions, score multipliers, delays
 - Methods: `CalculateTimeLimit(runNumber)`, `CalculateRunScore(timeRemaining, runNumber)`
 - Allows tweaking without code changes
 
-#### **WorldGenerationConfig** (`PokerWar.Data.WorldGenerationConfig`)
+#### **WorldGenerationConfig** (`StayOrCash.Data.WorldGenerationConfig`)
 *World generation parameters*
-- Create via: `Assets → Create → PokerWar → World Generation Config`
+- Create via: `Assets → Create → Stay or Cash → World Generation Config`
 - Settings: world size, terrain height, noise scale, object counts, spawn ranges
 - Supports multiple configs for different difficulty levels
 
@@ -424,7 +424,7 @@ Player presses E
 3. Implement system with single responsibility
 4. Add C# events for state changes
 5. Subscribe to events in observers (UI, etc.)
-6. Use proper namespace (`PokerWar.MyFeature`)
+6. Use proper namespace (`StayOrCash.MyFeature`)
 7. Add XML documentation (`/// <summary>`)
 
 **Best Practices**:

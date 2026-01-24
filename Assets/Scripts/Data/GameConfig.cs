@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace PokerWar.Data
+namespace StayOrCash.Data
 {
     /// <summary>
     /// ScriptableObject that stores game configuration settings.
-    /// Create via: Assets -> Create -> PokerWar -> Game Config
+    /// Create via: Assets -> Create -> Stay or Cash -> Game Config
     /// </summary>
-    [CreateAssetMenu(fileName = "GameConfig", menuName = "PokerWar/Game Config", order = 1)]
+    [CreateAssetMenu(fileName = "GameConfig", menuName = "Stay or Cash/Game Config", order = 1)]
     public class GameConfig : ScriptableObject
     {
         [Header("Time Settings")]

@@ -1,7 +1,7 @@
 using UnityEngine;
-using PokerWar.Data;
+using StayOrCash.Data;
 
-namespace PokerWar.Systems
+namespace StayOrCash.Systems
 {
     /// <summary>
     /// Manages player score and run tracking.

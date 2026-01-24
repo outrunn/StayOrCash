@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
-using PokerWar.Systems;
+using StayOrCash.Systems;
 
-namespace PokerWar.UI
+namespace StayOrCash.UI
 {
     /// <summary>
     /// Simple main menu UI showing player cash and play button.

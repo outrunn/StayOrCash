@@ -4,18 +4,18 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEditor.SceneManagement;
 using TMPro;
-using PokerWar.UI;
-using PokerWar.Managers;
+using StayOrCash.UI;
+using StayOrCash.Managers;
 
-namespace PokerWar.Editor
+namespace StayOrCash.Editor
 {
     /// <summary>
     /// Automatic setup tool for gameplay loop UI and scenes.
-    /// Run via: Tools → PokerWar → Setup Gameplay Loop
+    /// Run via: Tools → Stay or Cash → Setup Gameplay Loop
     /// </summary>
     public class GameplayLoopSetup : EditorWindow
     {
-        [MenuItem("Tools/PokerWar/Setup Gameplay Loop (Auto)")]
+        [MenuItem("Tools/Stay or Cash/Setup Gameplay Loop (Auto)")]
         public static void SetupEverything()
         {
             if (EditorUtility.DisplayDialog("Setup Gameplay Loop",

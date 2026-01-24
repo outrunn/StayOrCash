@@ -1,8 +1,8 @@
 using UnityEngine;
-using PokerWar.Interfaces;
-using PokerWar.Managers;
+using StayOrCash.Interfaces;
+using StayOrCash.Managers;
 
-namespace PokerWar.World
+namespace StayOrCash.World
 {
     /// <summary>
     /// Interactable chest that the player must find and collect.

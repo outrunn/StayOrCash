@@ -1,4 +1,4 @@
-namespace PokerWar.Interfaces
+namespace StayOrCash.Interfaces
 {
     /// <summary>
     /// Interface for objects that need to observe game state changes.

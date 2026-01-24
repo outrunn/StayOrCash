@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace PokerWar.Data
+namespace StayOrCash.Data
 {
     /// <summary>
     /// ScriptableObject that stores world generation settings.
-    /// Create via: Assets -> Create -> PokerWar -> World Generation Config
+    /// Create via: Assets -> Create -> Stay or Cash -> World Generation Config
     /// </summary>
-    [CreateAssetMenu(fileName = "WorldGenerationConfig", menuName = "PokerWar/World Generation Config", order = 2)]
+    [CreateAssetMenu(fileName = "WorldGenerationConfig", menuName = "Stay or Cash/World Generation Config", order = 2)]
     public class WorldGenerationConfig : ScriptableObject
     {
         [Header("Terrain Settings")]

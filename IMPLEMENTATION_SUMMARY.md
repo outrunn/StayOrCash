@@ -1,4 +1,4 @@
-# Implementation Summary - PokerWar
+# Implementation Summary - StayOrCash
 
 ## What's Been Built
 

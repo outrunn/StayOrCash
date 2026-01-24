@@ -1,7 +1,7 @@
 using UnityEngine;
-using PokerWar.Managers;
-using PokerWar.Player;
-using PokerWar.World;
+using StayOrCash.Managers;
+using StayOrCash.Player;
+using StayOrCash.World;
 
 /// <summary>
 /// Verifies that the game is set up correctly and provides helpful debug information.

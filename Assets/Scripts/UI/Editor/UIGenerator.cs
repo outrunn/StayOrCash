@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityEditor;
 using TMPro;
 using System.IO;
-using PokerWar.UI;
+using StayOrCash.UI;
 
 /// <summary>
 /// Editor tool to automatically generate the game's UI prefab with proper layout and styling.

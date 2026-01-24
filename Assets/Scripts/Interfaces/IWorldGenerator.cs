@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PokerWar.Interfaces
+namespace StayOrCash.Interfaces
 {
     /// <summary>
     /// Interface for procedural world generation systems.

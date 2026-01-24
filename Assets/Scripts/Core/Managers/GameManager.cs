@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using PokerWar.Systems;
-using PokerWar.Data;
-using PokerWar.Interfaces;
-using PokerWar.World;
+using StayOrCash.Systems;
+using StayOrCash.Data;
+using StayOrCash.Interfaces;
+using StayOrCash.World;
 
-namespace PokerWar.Managers
+namespace StayOrCash.Managers
 {
     /// <summary>
     /// Main game manager that orchestrates all game systems.
@@ -94,7 +94,7 @@ namespace PokerWar.Managers
         {
             if (gameConfig == null)
             {
-                Debug.LogError("GameManager: GameConfig not assigned! Create one via Assets -> Create -> PokerWar -> Game Config");
+                Debug.LogError("GameManager: GameConfig not assigned! Create one via Assets -> Create -> Stay or Cash -> Game Config");
             }
 
             if (timeManager == null)

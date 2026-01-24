@@ -1,9 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
-using PokerWar.Interfaces;
-using PokerWar.Data;
+using StayOrCash.Interfaces;
+using StayOrCash.Data;
 
-namespace PokerWar.World
+namespace StayOrCash.World
 {
     /// <summary>
     /// Generates procedural terrain and spawns nature objects using configuration data.

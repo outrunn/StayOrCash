@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PokerWar.Interfaces
+namespace StayOrCash.Interfaces
 {
     /// <summary>
     /// Interface for objects that can be interacted with by the player.

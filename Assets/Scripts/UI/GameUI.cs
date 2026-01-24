@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using PokerWar.Managers;
-using PokerWar.Systems;
-using PokerWar.Interfaces;
-using PokerWar.Data;
-using PokerWar.World;
+using StayOrCash.Managers;
+using StayOrCash.Systems;
+using StayOrCash.Interfaces;
+using StayOrCash.Data;
+using StayOrCash.World;
 
-namespace PokerWar.UI
+namespace StayOrCash.UI
 {
     /// <summary>
     /// Main UI controller that subscribes to game events and updates displays.
@@ -45,7 +45,7 @@ namespace PokerWar.UI
 
         private TimeManager timeManager;
         private ScoreManager scoreManager;
-        private PokerWar.Player.FirstPersonController playerController;
+        private StayOrCash.Player.FirstPersonController playerController;
 
         private void Start()
         {
@@ -154,7 +154,7 @@ namespace PokerWar.UI
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
                 if (player != null)
                 {
-                    playerController = player.GetComponent<PokerWar.Player.FirstPersonController>();
+                    playerController = player.GetComponent<StayOrCash.Player.FirstPersonController>();
                 }
             }
         }
@@ -222,7 +222,7 @@ namespace PokerWar.UI
         {
             if (GameManager.Instance == null) return null;
 
-            var worldGen = GameManager.Instance.WorldGenerator as PokerWar.World.ProceduralWorldGenerator;
+            var worldGen = GameManager.Instance.WorldGenerator as StayOrCash.World.ProceduralWorldGenerator;
             if (worldGen == null) return null;
 
             GameObject chest = worldGen.GetCurrentChest();
