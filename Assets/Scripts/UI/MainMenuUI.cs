@@ -24,8 +24,8 @@ namespace StayOrCash.UI
 
         private void Start()
         {
-            // Find or create PersistentDataManager
-            dataManager = FindObjectOfType<PersistentDataManager>();
+            // Find or create PersistentDataManager (Unity 6+ API)
+            dataManager = FindFirstObjectByType<PersistentDataManager>();
             if (dataManager == null)
             {
                 GameObject dataObj = new GameObject("PersistentDataManager");
@@ -86,7 +86,31 @@ namespace StayOrCash.UI
         private void OnPlayClicked()
         {
             Debug.Log("Play button clicked - Loading game scene");
-            SceneManager.LoadScene(gameSceneName);
+
+            // Disable play button to prevent double-clicks
+            if (playButton != null)
+            {
+                playButton.interactable = false;
+            }
+
+            // Use async loading for WebGL compatibility
+            StartCoroutine(LoadGameSceneAsync());
+        }
+
+        private System.Collections.IEnumerator LoadGameSceneAsync()
+        {
+            // Load scene asynchronously to prevent WebGL freezing
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(gameSceneName);
+
+            // Wait until the scene is fully loaded
+            while (!asyncLoad.isDone)
+            {
+                // You could update a loading bar here if desired
+                // float progress = asyncLoad.progress;
+                yield return null;
+            }
+
+            Debug.Log("Game scene loaded successfully!");
         }
 
         private void OnQuitClicked()

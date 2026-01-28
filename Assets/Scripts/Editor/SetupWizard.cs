@@ -439,7 +439,7 @@ namespace StayOrCash.Editor
             }
 
             // Add Directional Light if missing
-            Light[] lights = FindObjectsOfType<Light>();
+            Light[] lights = FindObjectsByType<Light>(FindObjectsSortMode.None);
             bool hasDirectionalLight = false;
             foreach (Light light in lights)
             {

@@ -522,6 +522,34 @@ Player presses E
   ```
 - Find player dynamically: `GameObject.FindGameObjectWithTag("Player").GetComponent<FirstPersonController>()`
 
+**Unity 6 API Deprecations**:
+- ❌ **NEVER** use `Object.FindObjectOfType<T>()` - deprecated in Unity 6
+- ✅ **ALWAYS** use `Object.FindFirstObjectByType<T>()` when you need the first matching object
+- ✅ **OR** use `Object.FindAnyObjectByType<T>()` when order doesn't matter (faster performance)
+- **Warning message format**:
+  ```
+  warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindFirstObjectByType instead or if finding any instance is acceptable the faster Object.FindAnyObjectByType'
+  ```
+- **Fix pattern**:
+  ```csharp
+  // OLD (deprecated in Unity 6)
+  Camera mainCamera = Object.FindObjectOfType<Camera>();
+  GameManager gm = FindObjectOfType<GameManager>();
+
+  // NEW (Unity 6+) - deterministic order
+  Camera mainCamera = Object.FindFirstObjectByType<Camera>();
+  GameManager gm = FindFirstObjectByType<GameManager>();
+
+  // NEW (Unity 6+) - faster when order doesn't matter
+  Camera mainCamera = Object.FindAnyObjectByType<Camera>();
+  GameManager gm = FindAnyObjectByType<GameManager>();
+  ```
+- **When to use which**:
+  - `FindFirstObjectByType`: Use when you need deterministic behavior (same object each time)
+  - `FindAnyObjectByType`: Use when you just need any instance and don't care about order (better performance)
+  - For singletons: Prefer `FindFirstObjectByType` for predictability
+- All deprecated Unity API warnings should be fixed immediately to maintain code quality
+
 ### Platform Considerations
 The project is configured for multi-platform development:
 - Desktop/PC uses higher quality rendering settings

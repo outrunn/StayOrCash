@@ -1,9 +1,11 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.SceneManagement;
 using StayOrCash.Systems;
 using StayOrCash.Data;
 using StayOrCash.Interfaces;
 using StayOrCash.World;
+using StayOrCash.UI;
 
 namespace StayOrCash.Managers
 {
@@ -23,6 +25,7 @@ namespace StayOrCash.Managers
         [SerializeField] private ScoreManager scoreManager;
         [SerializeField] private ProceduralWorldGenerator worldGenerator;
         [SerializeField] private PersistentDataManager dataManager;
+        [SerializeField] private GameUI gameUI;
 
         [Header("Player")]
         [SerializeField] private GameObject playerPrefab;
@@ -66,18 +69,35 @@ namespace StayOrCash.Managers
             // Auto-start game when this scene loads (from menu Play button)
             // Check if we're in the game scene (not menu scene)
             string currentScene = SceneManager.GetActiveScene().name;
+            Debug.Log($"[WebGL Debug] GameManager.Start() - Current scene: {currentScene}");
 
             if (currentScene != menuSceneName && currentScene != "MainMenu")
             {
                 // We're in the game scene, start playing
-                Debug.Log("GameManager: Auto-starting game from scene load");
-                StartGameFromMenu();
+                Debug.Log("[WebGL Debug] Auto-starting game from scene load");
+
+                // Give one frame for all managers to finish their Start() methods
+                StartCoroutine(StartGameDelayed());
             }
             else
             {
                 // We're in menu scene, just idle
+                Debug.Log("[WebGL Debug] In menu scene, staying idle");
                 ChangeState(GameState.Idle);
             }
+        }
+
+        /// <summary>
+        /// Delayed game start to ensure all systems are initialized.
+        /// Critical for WebGL builds where timing is sensitive.
+        /// </summary>
+        private System.Collections.IEnumerator StartGameDelayed()
+        {
+            // Wait one frame to ensure all Start() methods have executed
+            yield return null;
+
+            Debug.Log("[WebGL Debug] Starting game after initialization delay");
+            StartGameFromMenu();
         }
 
         private void OnDestroy()
@@ -92,29 +112,50 @@ namespace StayOrCash.Managers
 
         private void ValidateReferences()
         {
+            bool allValid = true;
+
             if (gameConfig == null)
             {
                 Debug.LogError("GameManager: GameConfig not assigned! Create one via Assets -> Create -> Stay or Cash -> Game Config");
+                allValid = false;
             }
 
             if (timeManager == null)
             {
                 Debug.LogError("GameManager: TimeManager not assigned!");
+                allValid = false;
             }
 
             if (scoreManager == null)
             {
                 Debug.LogError("GameManager: ScoreManager not assigned!");
+                allValid = false;
             }
 
             if (worldGenerator == null)
             {
                 Debug.LogError("GameManager: ProceduralWorldGenerator not assigned!");
+                allValid = false;
             }
 
             if (playerPrefab == null)
             {
                 Debug.LogError("GameManager: Player prefab not assigned!");
+                allValid = false;
+            }
+
+            if (gameUI == null)
+            {
+                Debug.LogWarning("GameManager: GameUI not assigned - loading screen will not be shown!");
+            }
+
+            if (!allValid)
+            {
+                Debug.LogError("[CRITICAL] GameManager has missing references! Game may not work correctly in WebGL build!");
+            }
+            else
+            {
+                Debug.Log("[WebGL Debug] All GameManager references validated successfully");
             }
         }
 
@@ -151,6 +192,14 @@ namespace StayOrCash.Managers
         /// </summary>
         public void StartNewGame()
         {
+            // Safety check - prevent starting if critical references are missing
+            if (scoreManager == null || timeManager == null || worldGenerator == null)
+            {
+                Debug.LogError("[CRITICAL] Cannot start game - missing manager references! Check Inspector.");
+                return;
+            }
+
+            Debug.Log("[WebGL Debug] Starting new game");
             scoreManager.ResetGame();
             ChangeState(GameState.Starting);
             StartNewRun();
@@ -162,26 +211,120 @@ namespace StayOrCash.Managers
         public void StartNewRun()
         {
             scoreManager.StartNewRun();
-
-            // Calculate time limit
             int runNumber = scoreManager.CurrentRun;
 
-            // Generate new world
-            int seed = Random.Range(0, 100000);
-            worldGenerator.GenerateWorld(seed);
+            // Start async world generation with loading screen
+            StartCoroutine(GenerateWorldWithLoading(runNumber));
+        }
 
-            // Wait for terrain to settle, then spawn player and start timer
-            Invoke(nameof(InitializeRun), gameConfig != null ? gameConfig.playerSpawnDelay : 0.1f);
+        /// <summary>
+        /// Coroutine that generates the world asynchronously with a loading screen.
+        /// </summary>
+        private IEnumerator GenerateWorldWithLoading(int runNumber)
+        {
+            Debug.Log($"[WebGL Debug] Starting world generation for run {runNumber}");
+
+            // Ensure UI system is ready
+            if (gameUI == null)
+            {
+                Debug.LogWarning("[WebGL Debug] GameUI is null! Loading screen will not be shown.");
+            }
+
+            // Show loading screen
+            if (gameUI != null)
+            {
+                gameUI.ShowLoadingScreen("Generating world...", 0f);
+            }
+
+            // Give one frame for UI to update
+            yield return null;
+
+            // Generate new world asynchronously
+            int seed = Random.Range(0, 100000);
+            Debug.Log($"[WebGL Debug] Starting world generation with seed {seed}");
+
+            yield return StartCoroutine(worldGenerator.GenerateWorldAsync(seed, (progress, message) =>
+            {
+                // Update loading screen with progress bar
+                if (gameUI != null)
+                {
+                    gameUI.ShowLoadingScreen(message, progress);
+                }
+                Debug.Log($"[WebGL Debug] Generation progress: {progress * 100:F0}% - {message}");
+            }));
+
+            Debug.Log("[WebGL Debug] World generation complete");
+
+            // Wait for terrain physics and textures to fully settle
+            if (gameUI != null)
+            {
+                gameUI.ShowLoadingScreen("Finalizing terrain...", 0.95f);
+            }
+
+            // Multiple smaller yields for WebGL compatibility (prevents browser freezing)
+            for (int i = 0; i < 10; i++)
+            {
+                yield return null; // Yield every frame instead of one big wait
+            }
+
+            // Spawn player (but camera will be disabled)
+            if (gameUI != null)
+            {
+                gameUI.ShowLoadingScreen("Preparing player...", 0.98f);
+            }
+
+            Debug.Log("[WebGL Debug] Spawning player");
+            SpawnPlayer();
+
+            // Yield a few frames instead of WaitForSeconds for WebGL
+            for (int i = 0; i < 3; i++)
+            {
+                yield return null;
+            }
+            Debug.Log("[WebGL Debug] Player spawned");
+
+            // Start timer
+            Debug.Log("[WebGL Debug] Starting timer");
+            timeManager.StartTimer(scoreManager.CurrentRun);
+
+            // Give a few more frames for everything to be ready
+            for (int i = 0; i < 3; i++)
+            {
+                yield return null;
+            }
+
+            // Enable player camera NOW that everything is loaded
+            Debug.Log("[WebGL Debug] Enabling player camera");
+            EnablePlayerCamera();
+
+            // Show 100% complete briefly before hiding
+            if (gameUI != null)
+            {
+                gameUI.ShowLoadingScreen("Ready!", 1.0f);
+            }
+
+            // Brief pause before hiding loading screen (using frames instead of time)
+            for (int i = 0; i < 10; i++)
+            {
+                yield return null;
+            }
+
+            // Hide loading screen and show the fully loaded scene
+            Debug.Log("[WebGL Debug] Hiding loading screen");
+            if (gameUI != null)
+            {
+                gameUI.HideLoadingScreen();
+            }
 
             ChangeState(GameState.Playing);
 
-            Debug.Log($"Run {runNumber} started!");
+            Debug.Log($"[WebGL Debug] Run {runNumber} started successfully!");
         }
 
         private void InitializeRun()
         {
-            SpawnPlayer();
-            timeManager.StartTimer(scoreManager.CurrentRun);
+            // Legacy method - no longer used (kept for compatibility)
+            // Player spawning is now handled in GenerateWorldWithLoading
         }
 
         private void SpawnPlayer()
@@ -200,6 +343,14 @@ namespace StayOrCash.Managers
             {
                 playerInstance = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
                 playerInstance.name = "Player";
+
+                // Disable camera initially to prevent seeing the unloaded world
+                Camera playerCamera = playerInstance.GetComponentInChildren<Camera>();
+                if (playerCamera != null)
+                {
+                    playerCamera.enabled = false;
+                    Debug.Log("Player camera disabled during world loading");
+                }
             }
             else
             {
@@ -216,6 +367,22 @@ namespace StayOrCash.Managers
                     // Chest will handle player reference internally
                     var chestScript = chest.GetComponent<ChestInteractable>();
                     chestScript?.SetPlayerReference(playerInstance.transform);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Enable the player camera after world is fully loaded.
+        /// </summary>
+        private void EnablePlayerCamera()
+        {
+            if (playerInstance != null)
+            {
+                Camera playerCamera = playerInstance.GetComponentInChildren<Camera>();
+                if (playerCamera != null)
+                {
+                    playerCamera.enabled = true;
+                    Debug.Log("Player camera enabled - world fully loaded!");
                 }
             }
         }

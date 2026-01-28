@@ -33,6 +33,12 @@ namespace StayOrCash.UI
         [SerializeField] private GameObject gameOverPanel;
         [SerializeField] private TextMeshProUGUI gameOverText;
 
+        [Header("Loading Screen")]
+        [SerializeField] private GameObject loadingPanel;
+        [SerializeField] private TextMeshProUGUI loadingText;
+        [SerializeField] private UnityEngine.UI.Image loadingBar;
+        [SerializeField] private TextMeshProUGUI loadingPercentText;
+
         [Header("Timer Color Settings")]
         [SerializeField] private Color normalColor = Color.white;
         [SerializeField] private Color warningColor = Color.yellow;
@@ -141,6 +147,7 @@ namespace StayOrCash.UI
             if (gameOverPanel != null) gameOverPanel.SetActive(false);
             if (promptText != null) promptText.gameObject.SetActive(false);
             if (findChestText != null) findChestText.gameObject.SetActive(false);
+            if (loadingPanel != null) loadingPanel.SetActive(false);
         }
 
         /// <summary>
@@ -375,6 +382,61 @@ namespace StayOrCash.UI
             if (playerController != null)
             {
                 playerController.enabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Show loading screen with message and progress bar.
+        /// </summary>
+        /// <param name="message">Status message to display</param>
+        /// <param name="progress">Progress from 0 to 1 (optional)</param>
+        public void ShowLoadingScreen(string message = "Generating world...", float progress = 0f)
+        {
+            if (loadingPanel != null)
+            {
+                loadingPanel.SetActive(true);
+            }
+
+            if (loadingText != null)
+            {
+                loadingText.text = message;
+            }
+
+            // Update loading bar fill amount
+            if (loadingBar != null)
+            {
+                loadingBar.fillAmount = Mathf.Clamp01(progress);
+            }
+
+            // Update percentage text
+            if (loadingPercentText != null)
+            {
+                int percent = Mathf.RoundToInt(progress * 100f);
+                loadingPercentText.text = $"{percent}%";
+            }
+
+            // Show cursor during loading
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        /// <summary>
+        /// Hide loading screen.
+        /// </summary>
+        public void HideLoadingScreen()
+        {
+            if (loadingPanel != null)
+            {
+                loadingPanel.SetActive(false);
+            }
+
+            // Lock cursor after loading (if in gameplay)
+            if (GameManager.Instance != null &&
+                (GameManager.Instance.CurrentState == GameState.Playing ||
+                 GameManager.Instance.CurrentState == GameState.Starting))
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
             }
         }
 

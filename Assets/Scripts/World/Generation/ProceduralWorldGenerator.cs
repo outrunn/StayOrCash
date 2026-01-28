@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using StayOrCash.Interfaces;
 using StayOrCash.Data;
@@ -37,6 +38,25 @@ namespace StayOrCash.World
         private List<GameObject> spawnedObjects = new List<GameObject>();
         private GameObject currentChest;
         private int currentSeed;
+        private Material cachedTerrainMaterial;
+
+        private void Awake()
+        {
+            // Load pre-built terrain material from Resources
+            // This ensures the URP Terrain shader is included in WebGL builds
+            cachedTerrainMaterial = Resources.Load<Material>("ProceduralTerrainMaterial");
+
+            if (cachedTerrainMaterial == null)
+            {
+                Debug.LogError("[WebGL Fix] ProceduralTerrainMaterial not found in Resources folder! " +
+                    "Terrain will not render correctly in WebGL builds. " +
+                    "Material should be at Assets/Resources/ProceduralTerrainMaterial.mat");
+            }
+            else
+            {
+                Debug.Log("[WebGL Fix] Terrain material successfully loaded from Resources");
+            }
+        }
 
         #region IWorldGenerator Implementation
 
@@ -60,6 +80,58 @@ namespace StayOrCash.World
 
             Debug.Log($"<color=lime>========================================</color>");
             Debug.Log($"<color=lime>WORLD GENERATION COMPLETE (Seed: {seed})</color>");
+            Debug.Log($"<color=lime>Total objects spawned: {spawnedObjects.Count}</color>");
+            Debug.Log($"<color=lime>========================================</color>");
+        }
+
+        /// <summary>
+        /// Async version of GenerateWorld that yields between steps to prevent freezing.
+        /// Perfect for WebGL builds where synchronous generation causes browser hang.
+        /// </summary>
+        /// <param name="seed">Random seed for world generation</param>
+        /// <param name="onProgress">Callback for progress updates (0-1)</param>
+        public System.Collections.IEnumerator GenerateWorldAsync(int seed, System.Action<float, string> onProgress = null)
+        {
+            if (config == null)
+            {
+                Debug.LogError("WorldGenerationConfig not assigned!");
+                yield break;
+            }
+
+            currentSeed = seed;
+            Random.InitState(seed);
+
+            onProgress?.Invoke(0f, "Clearing previous world...");
+            ClearWorld();
+            yield return null; // Wait one frame
+
+            onProgress?.Invoke(0.15f, "Creating terrain...");
+            CreateTerrain();
+            yield return null; // Wait one frame
+
+            onProgress?.Invoke(0.35f, "Applying textures...");
+            ApplyTerrainTexture();
+            yield return null; // Wait one frame
+
+            onProgress?.Invoke(0.5f, "Generating grass and flowers...");
+            GenerateTerrainDetails();
+            yield return null; // Wait one frame after grass/flowers
+
+            // Additional frame wait for WebGL to process terrain details
+            yield return null;
+
+            onProgress?.Invoke(0.75f, "Spawning nature objects...");
+            SpawnNatureObjects();
+            yield return null; // Wait one frame
+
+            onProgress?.Invoke(0.9f, "Placing treasure chest...");
+            SpawnChest();
+            yield return null; // Wait one frame
+
+            onProgress?.Invoke(1f, "Complete!");
+
+            Debug.Log($"<color=lime>========================================</color>");
+            Debug.Log($"<color=lime>ASYNC WORLD GENERATION COMPLETE (Seed: {seed})</color>");
             Debug.Log($"<color=lime>Total objects spawned: {spawnedObjects.Count}</color>");
             Debug.Log($"<color=lime>========================================</color>");
         }
@@ -220,14 +292,28 @@ namespace StayOrCash.World
             // Assign the layer to the terrain
             terrainData.terrainLayers = new TerrainLayer[] { terrainLayer };
 
-            // Ensure terrain has the correct URP material
-            Material terrainMaterial = terrain.materialTemplate;
-            if (terrainMaterial == null)
+            // [WEBGL FIX] Use pre-loaded material from Resources instead of runtime shader lookup
+            // This prevents "ArgumentNullException: shader cannot be null" in WebGL builds
+            if (cachedTerrainMaterial != null)
             {
-                // Try to find the default URP terrain material
-                terrainMaterial = new Material(Shader.Find("Universal Render Pipeline/Terrain/Lit"));
-                terrain.materialTemplate = terrainMaterial;
-                Debug.Log("Applied URP Terrain/Lit shader to terrain");
+                terrain.materialTemplate = cachedTerrainMaterial;
+                Debug.Log("[WebGL Fix] Applied pre-loaded URP terrain material from Resources");
+            }
+            else
+            {
+                // Fallback: Try to find shader at runtime (may fail in WebGL if shader was stripped)
+                Shader terrainShader = Shader.Find("Universal Render Pipeline/Terrain/Lit");
+                if (terrainShader != null)
+                {
+                    Material terrainMaterial = new Material(terrainShader);
+                    terrain.materialTemplate = terrainMaterial;
+                    Debug.LogWarning("[WebGL Fix] Created terrain material at runtime - this may fail in WebGL builds!");
+                }
+                else
+                {
+                    Debug.LogError("[WebGL Fix] CRITICAL: URP Terrain shader not found! Terrain will not render. " +
+                        "Make sure 'Universal Render Pipeline/Terrain/Lit' is in GraphicsSettings > Always Included Shaders");
+                }
             }
 
             Debug.Log($"Terrain texture applied successfully: {config.groundTexture.name}");

@@ -47,7 +47,7 @@ namespace StayOrCash.Editor
             Scene menuScene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
 
             // DefaultGameObjects should include a camera, but let's ensure it exists
-            Camera mainCamera = Object.FindObjectOfType<Camera>();
+            Camera mainCamera = Object.FindFirstObjectByType<Camera>();
             if (mainCamera == null)
             {
                 GameObject cameraObj = new GameObject("Main Camera");
@@ -173,7 +173,7 @@ namespace StayOrCash.Editor
             Scene mainScene = EditorSceneManager.OpenScene("Assets/Scenes/mainscene.unity", OpenSceneMode.Single);
 
             // Ensure there's a temporary camera (player will create its own)
-            Camera existingCamera = Object.FindObjectOfType<Camera>();
+            Camera existingCamera = Object.FindFirstObjectByType<Camera>();
             if (existingCamera == null)
             {
                 GameObject tempCameraObj = new GameObject("Temporary Camera");
@@ -185,7 +185,7 @@ namespace StayOrCash.Editor
             }
 
             // Find or create Canvas
-            Canvas canvas = Object.FindObjectOfType<Canvas>();
+            Canvas canvas = Object.FindFirstObjectByType<Canvas>();
             GameObject canvasObj;
 
             if (canvas == null)
@@ -201,7 +201,7 @@ namespace StayOrCash.Editor
                 scaler.referenceResolution = new Vector2(1920, 1080);
 
                 // Create EventSystem if needed
-                if (Object.FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
+                if (Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
                 {
                     GameObject eventSystemObj = new GameObject("EventSystem");
                     eventSystemObj.AddComponent<UnityEngine.EventSystems.EventSystem>();
@@ -214,7 +214,7 @@ namespace StayOrCash.Editor
             }
 
             // Find or create GameUI
-            GameUI gameUI = Object.FindObjectOfType<GameUI>();
+            GameUI gameUI = Object.FindFirstObjectByType<GameUI>();
             if (gameUI == null)
             {
                 GameObject gameUIObj = new GameObject("GameUI");
@@ -384,7 +384,7 @@ namespace StayOrCash.Editor
             gameOverTextField?.SetValue(gameUI, gameOverText);
 
             // Find GameManager and set menu scene name
-            GameManager gameManager = Object.FindObjectOfType<GameManager>();
+            GameManager gameManager = Object.FindFirstObjectByType<GameManager>();
             if (gameManager != null)
             {
                 var menuSceneNameField = typeof(GameManager).GetField("menuSceneName", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
